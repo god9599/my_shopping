@@ -16,6 +16,7 @@ const app = express();
 
 //View engine setup
 app.set('views',path.join(__dirname,'views'));
+
 app.set('view engine','ejs');
 
 //Set public folder
@@ -25,8 +26,11 @@ app.use(express.static(path.join(__dirname,'public')));
 const pagesRouter = require('./routes/pages');
 const adminPagesRouter = require('./routes/admin_pages');
 
-app.use('/',pagesRouter);
-app.use('/admin/pages',adminPagesRouter);
+app.get('/',function(req,res){
+    res.render('index',{
+        title:"Home"
+    });
+});
 
 
 //Start the server
