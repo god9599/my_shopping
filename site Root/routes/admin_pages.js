@@ -4,6 +4,7 @@ const router = express.Router();
 //get page model
 const Page = require('../models/page');
 
+
 //get pages index
 router.get('/',function(req,res){
     Page.find({}).sort({sorting:1}).exec(function(err,pages){
@@ -12,8 +13,6 @@ router.get('/',function(req,res){
         })
     })
 })
-
-
 
 //get add page
 router.get('/add-page',function(req,res){
@@ -74,6 +73,25 @@ router.post('/add-page',function(req,res){
                 });
             }
         })
+    }
+});
+
+
+//post reorder pages
+router.post('/reorder-pages',function(req,res){
+    let ids = req.body['id[]'];
+    let count = 0;
+    for(let i=0;i<ids.length;i++){
+        let id = ids[i];
+        count ++;
+        (function(count){
+            Page.findById(id, function(err, page){
+                page.sorting = count;
+                page.save(function(err){
+                    if(err) return console.log(err);
+                });
+            });
+    }) (count);
     }
 });
 
