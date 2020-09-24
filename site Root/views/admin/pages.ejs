@@ -20,7 +20,7 @@
                 <% if (page.slug == "home") { %>
                 <td></td>
                 <% } else {%>
-                <td><a href="/admin/pages/edit-page/<%= page._id %>">Delete</a></td>
+                <td><a class="confirmDeletion" href="/admin/pages/delete-page/<%= page._id %>">Delete</a></td>
                 <% }%>
             </tr>
             <% }); %>
@@ -33,7 +33,7 @@
         items : "tr:not('.home')",
         placeholder : "ui-state-hightlight",
         update : function() {
-            let ids = $('tbody').sortable("serialize");
+            let ids = $('tbody').sortable().sortable("serialize");
             let url = "/admin/pages/reorder-pages";
 
             $.post(url, ids);
