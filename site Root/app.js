@@ -57,7 +57,7 @@ app.use(function (req, res, next) {
 //Set routes
 const pagesRouter = require('./routes/pages');
 const adminPagesRouter = require('./routes/admin_pages');
-
+const adminCategoryRouter = require('./routes/admin_categories');
 
 app.get('/',function(req,res){
     res.render('index',{
@@ -65,8 +65,9 @@ app.get('/',function(req,res){
     });
 });
 
+app.use('/',pagesRouter);
 app.use('/admin/pages',adminPagesRouter);
-
+app.use('/admin/categories',adminCategoryRouter);
 
 //Start the server
 const port = 3000;
