@@ -7,6 +7,8 @@ const bodyParser = require('body-parser');
 const expressMessages = require('express-messages');
 const connectFlash = require('connect-flash');
 const session = require('express-session');
+const fileUpload = require('express-fileupload');
+
 //Connect to db
 mongoose.connect(config.database);
 const db = mongoose.connection;
@@ -25,6 +27,9 @@ app.set('view engine','ejs');
 
 //Set public folder
 app.use(express.static(path.join(__dirname,'public')));
+
+//Express fileupload middleware
+app.use(fileUpload());
 
 // Body Parser middleware
 // 
@@ -58,6 +63,7 @@ app.use(function (req, res, next) {
 const pagesRouter = require('./routes/pages');
 const adminPagesRouter = require('./routes/admin_pages');
 const adminCategoryRouter = require('./routes/admin_categories');
+const adminProductRouter = require('./routes/admin_products');
 
 app.get('/',function(req,res){
     res.render('index',{
@@ -68,6 +74,7 @@ app.get('/',function(req,res){
 app.use('/',pagesRouter);
 app.use('/admin/pages',adminPagesRouter);
 app.use('/admin/categories',adminCategoryRouter);
+app.use('/admin/products',adminProductRouter);
 
 //Start the server
 const port = 3000;
