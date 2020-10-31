@@ -24,21 +24,24 @@ router.get('/',function(req,res){
    })
 });
 
-//get add page
-router.get('/add-page',function(req,res){
+//get add product
+router.get('/add-product',function(req,res){
     let title = "";
-    let slug = "";
-    let content = "";
-
-    res.render('admin/add_page',{
-        title : title,
-        slug : slug,
-        content : content
+    let desc = "";
+    let price = "";
+    Category.find(function(err,categories){
+        res.render('admin/add_product',{
+            title : title,
+            desc : desc,
+            categories : categories,
+            price : price
+        });
     });
+    
 });
 
 //post add page
-router.post('/add-page',function(req,res){
+router.post('/add-product',function(req,res){
 
     req.checkBody('title','Title must have a value.').notEmpty();
     req.checkBody('content','Content must have a value.').notEmpty();
@@ -53,7 +56,7 @@ router.post('/add-page',function(req,res){
     let errors = req.validationErrors();
 
     if(errors){
-        res.render('admin/add_page',{
+        res.render('admin/add_product',{
             errors : errors,
             title : title,
             slug : slug,
@@ -62,8 +65,8 @@ router.post('/add-page',function(req,res){
     }else{
         Page.findOne({slug : slug}, function(err,page){
             if(page){
-                req.flash('danger','Page slug exists, choose another');
-                res.render('admin/add-page',{
+                req.flash('danger','Product slug exists, choose another');
+                res.render('admin/add-product',{
                     title : title,
                     slug : slug,
                     content : content
@@ -78,8 +81,8 @@ router.post('/add-page',function(req,res){
                 });
                 page.save(function(err){
                     if(err) return console.log(err);
-                    req.flash('success','Page added!');
-                    res.redirect('/admin/pages');   
+                    req.flash('success','Product added!');
+                    res.redirect('/admin/products');   
                 });
             }
         })
@@ -88,7 +91,7 @@ router.post('/add-page',function(req,res){
 
 
 //post reorder pages
-router.post('/reorder-pages',function(req,res){
+router.post('/reorder-products',function(req,res){
     let ids = req.body['id[]'];
     let count = 0;
     for(var i=0;i<ids.length;i++){
@@ -107,11 +110,11 @@ router.post('/reorder-pages',function(req,res){
 
 
 //get edit page
-router.get('/edit-page/:id',function(req,res){
+router.get('/edit-product/:id',function(req,res){
     Page.findById(req.params.id,function(err, page){
         if(err) return console.log(err);
 
-        res.render('admin/edit_page',{
+        res.render('admin/edit_product',{
             title : page.title,
             slug : page.slug,
             content : page.content,
@@ -124,7 +127,7 @@ router.get('/edit-page/:id',function(req,res){
 });
 
 //post edit page
-router.post('/edit-page/:id',function(req,res){
+router.post('/edit-product/:id',function(req,res){
 
     req.checkBody('title','Title must have a value.').notEmpty();
     req.checkBody('content','Content must have a value.').notEmpty();
@@ -139,7 +142,7 @@ router.post('/edit-page/:id',function(req,res){
     let errors = req.validationErrors();
 
     if(errors){
-        res.render('admin/edit_page',{
+        res.render('admin/edit_product',{
             errors : errors,
             title : title,
             slug : slug,
@@ -149,8 +152,8 @@ router.post('/edit-page/:id',function(req,res){
     }else{
         Page.findOne({slug : slug, _id:{'$ne':id}}, function(err,page){
             if(page){
-                req.flash('danger','Page slug exists, choose another');
-                res.render('admin/edit-page',{
+                req.flash('danger','Product slug exists, choose another');
+                res.render('admin/edit-product',{
                     title : title,
                     slug : slug,
                     content : content,
@@ -165,8 +168,8 @@ router.post('/edit-page/:id',function(req,res){
                     page.content = content;
                     page.save(function(err){
                         if(err) return console.log(err);
-                        req.flash('success','Page added!');
-                        res.redirect('/admin/pages/edit-page/'+ id);   
+                        req.flash('success','Product added!');
+                        res.redirect('/admin/products/edit-product/'+ id);   
                     });
                 })
                
@@ -177,11 +180,11 @@ router.post('/edit-page/:id',function(req,res){
 
 
 //get delete page
-router.get('/delete-page/:id',function(req,res){
+router.get('/delete-product/:id',function(req,res){
     Page.findByIdAndRemove(req.params.id,function(err){
         if(err) return console.log(err);
-        req.flash('success','Page deleted!');
-        res.redirect('/admin/pages/');
+        req.flash('success','Product deleted!');
+        res.redirect('/admin/products/');
     })
 })
 

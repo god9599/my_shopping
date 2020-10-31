@@ -32,7 +32,7 @@ app.use(express.static(path.join(__dirname,'public')));
 app.use(fileUpload());
 
 // Body Parser middleware
-// 
+
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({extended: false}));
 // parse application/json
