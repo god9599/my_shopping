@@ -37,7 +37,41 @@ app.use(fileUpload());
 app.use(bodyParser.urlencoded({extended: false}));
 // parse application/json
 app.use(bodyParser.json());
-app.use(expressValidator());
+
+//Express Validator middleware
+app.use(expressValidator({
+    errorFormatter:function(param,msg,value){
+        let namespace = param.split(',')
+        , root = namespace.shift()
+        , formatParam = root;
+
+        while(namespace.length){
+            formatParam += '[' + namespace.shift() + ']';
+        }
+        return{
+            param : formatParam,
+            msg : msg, 
+            value : value
+        };
+    },
+    customValidators : {
+        isImage : function(value, filename){
+            let extension = (path.extname(filename)).toLowerCase();
+            switch(extension){
+                case '.jpg':
+                    return '.jpg';
+                case '.jpeg':
+                    return '.jpeg';
+                case '.png':
+                    return '.png';
+                case '':
+                    return '.jpg';
+                default:
+                    return false;
+            }
+        }
+    }
+}));
 
 //set global errors variable
 app.locals.errors = null;
